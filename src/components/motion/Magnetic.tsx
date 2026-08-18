@@ -19,7 +19,7 @@ export function Magnetic({ children, className, strength = 0.18 }: MagneticProps
   return (
     <motion.span
       className={className}
-      style={prefersReducedMotion ? undefined : { x: springX, y: springY }}
+      style={{ x: springX, y: springY }}
       onPointerMove={(event) => {
         if (prefersReducedMotion || event.pointerType !== "mouse") {
           return;

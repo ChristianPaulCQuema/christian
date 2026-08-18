@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { navItems } from "@/lib/navigation";
 
 export function Navbar() {
@@ -11,19 +11,18 @@ export function Navbar() {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeSection, setActiveSection] = useState("#home");
+  const themeTimeoutRef = useRef<number | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    const onScroll = () => setHasScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (!isOpen) {
+      return;
+    }
 
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
   }, [isOpen]);
 
@@ -39,6 +38,7 @@ export function Navbar() {
     let frame = 0;
 
     const updateActiveSection = () => {
+      setHasScrolled(window.scrollY > 12);
       const marker = window.innerHeight * 0.38;
       const current = navItems.reduce((active, item) => {
         const section = document.querySelector(item.href);
@@ -70,6 +70,14 @@ export function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (themeTimeoutRef.current !== null) {
+        window.clearTimeout(themeTimeoutRef.current);
+      }
+    };
+  }, []);
+
   function toggleDarkMode() {
     const nextMode = !isDarkMode;
     const root = document.documentElement;
@@ -78,7 +86,13 @@ export function Navbar() {
     root.classList.toggle("dark", nextMode);
     localStorage.setItem("theme", nextMode ? "dark" : "light");
     setIsDarkMode(nextMode);
-    window.setTimeout(() => root.classList.remove("theme-switching"), 80);
+    if (themeTimeoutRef.current !== null) {
+      window.clearTimeout(themeTimeoutRef.current);
+    }
+    themeTimeoutRef.current = window.setTimeout(() => {
+      root.classList.remove("theme-switching");
+      themeTimeoutRef.current = null;
+    }, 80);
   }
 
   return (
@@ -135,9 +149,9 @@ export function Navbar() {
           >
             <motion.span
               key={isDarkMode ? "sun" : "moon"}
-              initial={prefersReducedMotion ? false : { opacity: 0, rotate: -20, scale: 0.86 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1, rotate: 0, scale: 1 }}
-              transition={{ duration: 0.16 }}
+              initial={false}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.16 }}
             >
               {isDarkMode ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
             </motion.span>

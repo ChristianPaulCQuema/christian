@@ -1,24 +1,31 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const deploymentHost = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+const metadataBase = deploymentHost
+  ? new URL(deploymentHost.startsWith("http") ? deploymentHost : `https://${deploymentHost}`)
+  : undefined;
+
 export const metadata: Metadata = {
   title: "Christian Paul Quema | Full-Stack & Mobile Developer",
   description:
     "Portfolio of Christian Paul Quema, a Full-Stack and Mobile Developer with IT technical support experience.",
-  metadataBase: new URL("http://localhost:3000"),
+  ...(metadataBase ? { metadataBase } : {}),
   openGraph: {
     title: "Christian Paul Quema | Full-Stack & Mobile Developer",
     description:
       "Explore selected web and mobile projects, skills, experience, and services by Christian Paul Quema.",
     type: "website",
-    images: [
-      {
-        url: "/assets/profile/christian.jpg",
-        width: 1251,
-        height: 1536,
-        alt: "Christian Paul Quema"
-      }
-    ]
+    images: metadataBase
+      ? [
+          {
+            url: "/assets/profile/christian.jpg",
+            width: 1251,
+            height: 1536,
+            alt: "Christian Paul Quema"
+          }
+        ]
+      : undefined
   },
   icons: {
     icon: "/favicon.png",

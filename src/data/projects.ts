@@ -254,6 +254,3 @@ export const projects: Project[] = [
     liveUrl: "https://caffe-kiosk.vercel.app/"
   }
 ];
-
-export const featuredProjects = projects.filter((project) => project.featured);
-export const otherProjects = projects.filter((project) => !project.featured);

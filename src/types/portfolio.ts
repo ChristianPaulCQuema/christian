@@ -18,11 +18,6 @@ export type Project = {
   featured?: boolean;
 };
 
-export type SkillGroup = {
-  category: string;
-  skills: string[];
-};
-
 export type ExperienceItem = {
   role: string;
   context: string;

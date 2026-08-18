@@ -7,7 +7,6 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { ProjectPreviewButton } from "@/components/projects/ProjectPreviewButton";
-import { transitions } from "@/lib/motion";
 import type { Project } from "@/types/portfolio";
 
 const MIN_IMAGES_FOR_UI_PREVIEW = 10;
@@ -32,14 +31,15 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
       }
     };
 
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isClickOpen, isOpen]);
+  }, [isOpen]);
 
   const modal = useMemo(
     () => (
@@ -164,23 +164,11 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
 
   return (
     <>
-      <motion.article
+      <article
         className="interactive-card premium-surface group flex h-full min-w-0 cursor-pointer flex-col rounded-[1.1rem] p-2.5 transition-transform duration-150 hover:-translate-y-0.5"
         onPointerEnter={(event) => {
           if (event.pointerType === "mouse") {
             setOpenMode("hover");
-          }
-        }}
-        onClick={() => setOpenMode("click")}
-        whileTap={prefersReducedMotion ? undefined : { scale: 0.995 }}
-        transition={transitions.quick}
-        tabIndex={0}
-        role="button"
-        aria-label={`Open ${project.title} project details`}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            setOpenMode("click");
           }
         }}
       >
@@ -241,7 +229,7 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
             ) : null}
           </div>
         </div>
-      </motion.article>
+      </article>
 
       {typeof document === "undefined" ? null : createPortal(modal, document.body)}
     </>
