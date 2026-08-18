@@ -328,15 +328,11 @@ img {
   transform: scaleX(1);
 }
 
-.skill-category-card {
-  min-height: 28rem;
-}
-
 .skill-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
-  gap: 0.85rem;
+  gap: 0.75rem 0.65rem;
 }
 
 .tech-item {
@@ -348,31 +344,50 @@ img {
   text-align: center;
   cursor: pointer;
   outline: none;
+  transition: transform 180ms ease;
+}
+
+.tech-item:hover,
+.tech-item:focus-visible,
+.tech-item.is-active {
+  transform: scale(1.04);
 }
 
 .skill-float {
-  animation: skill-float var(--float-duration, 4.2s) ease-in-out infinite;
+  display: block;
+  animation-duration: var(--float-duration, 3.2s);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
   animation-delay: var(--float-delay, 0s);
   transform: translate3d(0, 0, 0);
   will-change: transform;
 }
 
+.skill-float-up {
+  animation-name: skill-float-up;
+}
+
+.skill-float-down {
+  animation-name: skill-float-down;
+}
+
 .skill-float:hover,
-.skill-float:focus-visible,
-.skill-float.is-active {
+.tech-item:focus-visible .skill-float,
+.tech-item.is-active .skill-float {
   animation-play-state: paused;
 }
 
 .tech-icon-box {
   position: relative;
   display: flex;
-  width: 4.6rem;
-  height: 4.6rem;
+  width: 3.5rem;
+  height: 3.5rem;
   align-items: center;
   justify-content: center;
   margin-inline: auto;
   border: 1px solid rgb(203 213 225 / 0.9);
-  border-radius: 1.1rem;
+  border-radius: 0.9rem;
   background:
     radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--skill-color) 13%, transparent), transparent 62%),
     rgb(255 255 255 / 0.92);
@@ -398,8 +413,8 @@ img {
 }
 
 .tech-logo {
-  width: 2.85rem;
-  height: 2.85rem;
+  width: 2.1rem;
+  height: 2.1rem;
   transition:
     transform 180ms ease,
     filter 180ms ease;
@@ -407,10 +422,10 @@ img {
 
 .tech-name {
   display: block;
-  min-height: 2.3rem;
-  margin-top: 0.6rem;
+  min-height: 1.55rem;
+  margin-top: 0.35rem;
   color: #334155;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   line-height: 1.18;
   overflow-wrap: anywhere;
@@ -485,14 +500,29 @@ img {
   color: #f8fafc;
 }
 
-@keyframes skill-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
+@keyframes skill-float-up {
+  from {
+    transform: translate3d(0, 10px, 0);
   }
 
-  50% {
-    transform: translate3d(0, var(--float-distance, 8px), 0);
+  to {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes skill-float-down {
+  from {
+    transform: translate3d(0, -10px, 0);
+  }
+
+  to {
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+@media (min-width: 1024px) {
+  .skill-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -561,28 +591,25 @@ img {
       inset 0 1px 0 rgb(255 255 255 / 0.72);
   }
 
-  .skill-category-card {
-    min-height: auto;
-  }
-
   .skill-grid {
-    gap: 0.75rem;
+    gap: 0.65rem 0.55rem;
   }
 
   .tech-icon-box {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 1rem;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 0.85rem;
   }
 
   .tech-logo {
-    width: 2.45rem;
-    height: 2.45rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   .tech-name {
-    margin-top: 0.5rem;
-    font-size: 0.75rem;
+    min-height: 1.5rem;
+    margin-top: 0.32rem;
+    font-size: 0.7rem;
   }
 }
 

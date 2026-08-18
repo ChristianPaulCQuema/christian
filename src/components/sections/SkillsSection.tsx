@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Bot,
   BrainCircuit,
@@ -190,20 +190,18 @@ const skillColors: Record<string, string> = {
 
 export function SkillsSection() {
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
-  const prefersReducedMotion = useReducedMotion();
 
   return (
     <section id="skills" className="section ambient-section bg-white dark:bg-slate-950">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Skills" title="Skills & Technologies" />
 
-        <div className="grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl items-start justify-items-center gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
           {skillGroups.map((group, groupIndex) => (
             <Reveal key={group.category} delay={groupIndex * 0.06} variant={groupIndex % 2 === 0 ? "mask" : "slide"}>
               <SkillCategory
                 group={group}
                 selectedSkill={selectedSkill}
-                reducedMotion={Boolean(prefersReducedMotion)}
                 onSelect={setSelectedSkill}
               />
             </Reveal>
@@ -217,33 +215,31 @@ export function SkillsSection() {
 function SkillCategory({
   group,
   selectedSkill,
-  reducedMotion,
   onSelect
 }: {
   group: (typeof skillGroups)[number];
   selectedSkill: string | null;
-  reducedMotion: boolean;
   onSelect: (skill: string) => void;
 }) {
   const CategoryIcon = categoryIcons[group.category as keyof typeof categoryIcons] ?? Code2;
 
   return (
-    <article className="premium-surface interactive-card skill-category-card flex h-full min-w-0 flex-col overflow-hidden rounded-[1.35rem] p-4 sm:p-5 lg:p-6">
-      <div className="flex min-w-0 flex-col gap-4">
+    <article className="premium-surface interactive-card skill-category-card flex w-full max-w-[360px] min-w-0 flex-col overflow-visible rounded-[1.2rem] p-4 lg:p-5">
+      <div className="flex min-w-0 flex-col gap-3">
         <div className="flex items-start gap-3">
-          <span className="icon-tile flex h-12 w-12 flex-none items-center justify-center rounded-2xl">
-            <CategoryIcon className="h-5 w-5" aria-hidden="true" />
+          <span className="icon-tile flex h-10 w-10 flex-none items-center justify-center rounded-xl sm:h-11 sm:w-11">
+            <CategoryIcon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
           </span>
           <div className="min-w-0">
-            <h3 className="text-xl font-semibold leading-tight text-slate-950 dark:text-white">{group.category}</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+            <h3 className="text-lg font-semibold leading-tight text-slate-950 dark:text-white">{group.category}</h3>
+            <p className="mt-1.5 text-sm leading-5 text-slate-500 dark:text-slate-400">
               {categoryDescriptions[group.category] ?? "Technologies and practical tools"}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="skill-grid mt-6">
+      <div className="skill-grid mt-4">
         {group.skills.map((skill, skillIndex) => (
           <TechItem
             key={skill}
@@ -255,7 +251,7 @@ function SkillCategory({
         ))}
       </div>
 
-      {reducedMotion ? null : <span className="sr-only">Technology icons drift gently up and down with staggered timing.</span>}
+      <span className="sr-only">Technology icons drift gently up and down with staggered timing unless reduced motion is enabled.</span>
     </article>
   );
 }
@@ -273,13 +269,12 @@ function TechItem({
 }) {
   const Icon = skillIcons[skill] ?? Code2;
   const iconColor = skillColors[skill] ?? "#059669";
-  const driftDistance = `${index % 2 === 0 ? 8 : -10}px`;
   const iconStyle = {
     "--skill-color": iconColor,
-    "--float-distance": driftDistance,
-    "--float-duration": `${3.8 + (index % 4) * 0.45}s`,
-    "--float-delay": `${index * -0.35}s`
+    "--float-duration": `${3 + (index % 4) * 0.28}s`,
+    "--float-delay": `${(index % 5) * -0.24}s`
   } as CSSProperties;
+  const floatClassName = index % 2 === 0 ? "skill-float-up" : "skill-float-down";
 
   return (
     <motion.button
@@ -290,12 +285,14 @@ function TechItem({
       transition={transitions.quick}
       onClick={onSelect}
       style={iconStyle}
-      className={`tech-item skill-float group ${active ? "is-active" : ""}`}
+      className={`tech-item group ${active ? "is-active" : ""}`}
     >
-      <span className="tech-icon-box">
-        <Icon className="tech-logo" style={{ color: iconColor }} aria-hidden />
+      <span className={`skill-float ${floatClassName}`}>
+        <span className="tech-icon-box">
+          <Icon className="tech-logo" style={{ color: iconColor }} aria-hidden />
+        </span>
+        <span className="tech-name">{skill}</span>
       </span>
-      <span className="tech-name">{skill}</span>
     </motion.button>
   );
 }
