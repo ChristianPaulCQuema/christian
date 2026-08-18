@@ -77,6 +77,87 @@ const lakbayGoScreens = [
 
 export const projects: Project[] = [
   {
+    title: "CareFlow PH",
+    slug: "careflow-ph",
+    category: "Healthcare Platform",
+    summary:
+      "A Philippines-based healthcare and clinic management platform for patient records, appointments, consultations, and clinic workflows.",
+    description:
+      "A modern Philippines-based healthcare and clinic management platform designed to streamline patient records, appointments, consultations, healthcare workflows, and clinic operations through a centralized digital system.",
+    problem:
+      "Clinics can lose time when patient records, appointments, consultations, and daily operations are handled across separate tools or manual processes.",
+    solution:
+      "CareFlow PH centralizes core clinic workflows into one digital system so healthcare teams can manage patient information, scheduling, consultations, and operational tasks more clearly.",
+    customizable:
+      "Can be customized for clinics, medical offices, healthcare groups, consultation workflows, patient record formats, appointment rules, and local Philippine healthcare operations.",
+    images: [
+      screenshot("/assets/projects/careflowph.png", "CareFlow PH healthcare and clinic management dashboard")
+    ],
+    focus: [
+      "Healthcare",
+      "Clinic Management",
+      "Patient Management",
+      "Online Consultation",
+      "Philippines"
+    ],
+    liveUrl: "https://careflow-ph-demo.vercel.app/#/",
+    featured: true
+  },
+  {
+    title: "OmniBiz PH",
+    slug: "omnibiz-ph",
+    category: "Business Management System",
+    summary:
+      "A Philippines-based business management dashboard for centralizing operations, workflows, reports, and administrative functions.",
+    description:
+      "A modern Philippines-based integrated business management system designed to centralize business operations, management workflows, reporting, and administrative functions through a unified dashboard.",
+    problem:
+      "Business teams can struggle to coordinate operations, reporting, and administrative work when information is split across disconnected tools and manual workflows.",
+    solution:
+      "OmniBiz PH brings business operations, management workflows, reporting, and administrative functions into a unified dashboard for clearer day-to-day control.",
+    customizable:
+      "Can be customized for Philippine businesses, internal dashboards, operations teams, management workflows, reporting needs, role permissions, and administrative processes.",
+    images: [
+      screenshot("/assets/projects/omnibiz.png", "OmniBiz PH integrated business management dashboard")
+    ],
+    focus: [
+      "Business Management",
+      "Operations",
+      "Dashboard",
+      "Management System",
+      "Philippines"
+    ],
+    liveUrl: "https://omnibiz-demo.vercel.app",
+    featured: true
+  },
+  {
+    title: "PayFlow PH",
+    slug: "payflow-ph",
+    category: "Payroll and HR System",
+    summary:
+      "A Philippines-based payroll and workforce management system for attendance, leave, overtime, payslips, and reports.",
+    description:
+      "A Philippines-based payroll and workforce management system featuring employee records, attendance monitoring, leave and overtime management, payroll processing, payslip generation, government contribution fields, and reports.",
+    problem:
+      "Payroll and workforce administration can become error-prone when employee records, attendance, leave, overtime, payslips, contributions, and reports are tracked separately.",
+    solution:
+      "PayFlow PH organizes employee records, attendance monitoring, leave and overtime management, payroll processing, payslip generation, contribution fields, and reporting in one system.",
+    customizable:
+      "Can be customized for Philippine companies, HR teams, payroll rules, attendance policies, leave and overtime approval flows, government contribution fields, and reporting formats.",
+    images: [
+      screenshot("/assets/projects/payflow.png", "PayFlow PH payroll and workforce management dashboard")
+    ],
+    focus: [
+      "Payroll",
+      "Attendance",
+      "Workforce Management",
+      "HR System",
+      "Philippines"
+    ],
+    liveUrl: "https://payflow-ph-demo.vercel.app/#/login",
+    featured: true
+  },
+  {
     title: "PTC WorkWise",
     slug: "ptc-workwise",
     category: "HR and Employee Portal",

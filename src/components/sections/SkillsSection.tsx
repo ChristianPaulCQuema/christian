@@ -197,12 +197,11 @@ export function SkillsSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Skills" title="Skills & Technologies" />
 
-        <div className="space-y-6">
+        <div className="grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
           {skillGroups.map((group, groupIndex) => (
             <Reveal key={group.category} delay={groupIndex * 0.06} variant={groupIndex % 2 === 0 ? "mask" : "slide"}>
               <SkillCategory
                 group={group}
-                index={groupIndex}
                 selectedSkill={selectedSkill}
                 reducedMotion={Boolean(prefersReducedMotion)}
                 onSelect={setSelectedSkill}
@@ -217,78 +216,81 @@ export function SkillsSection() {
 
 function SkillCategory({
   group,
-  index,
   selectedSkill,
   reducedMotion,
   onSelect
 }: {
   group: (typeof skillGroups)[number];
-  index: number;
   selectedSkill: string | null;
   reducedMotion: boolean;
   onSelect: (skill: string) => void;
 }) {
   const CategoryIcon = categoryIcons[group.category as keyof typeof categoryIcons] ?? Code2;
-  const direction = index % 2 === 0 ? "normal" : "reverse";
-  const duration = `${Math.max(16, group.skills.length * 2.8)}s`;
-  const marqueeStyle = {
-    "--marquee-duration": duration,
-    "--marquee-direction": direction
-  } as CSSProperties;
 
   return (
-    <article className="premium-surface interactive-card overflow-hidden rounded-[1.35rem] p-4 sm:p-5 lg:p-6">
-      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <article className="premium-surface interactive-card skill-category-card flex h-full min-w-0 flex-col overflow-hidden rounded-[1.35rem] p-4 sm:p-5 lg:p-6">
+      <div className="flex min-w-0 flex-col gap-4">
         <div className="flex items-start gap-3">
-          <span className="icon-tile flex h-11 w-11 flex-none items-center justify-center rounded-2xl">
+          <span className="icon-tile flex h-12 w-12 flex-none items-center justify-center rounded-2xl">
             <CategoryIcon className="h-5 w-5" aria-hidden="true" />
           </span>
-          <div>
-            <h3 className="text-xl font-semibold text-slate-950 dark:text-white">{group.category}</h3>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
+          <div className="min-w-0">
+            <h3 className="text-xl font-semibold leading-tight text-slate-950 dark:text-white">{group.category}</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
               {categoryDescriptions[group.category] ?? "Technologies and practical tools"}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="tech-marquee" style={marqueeStyle}>
-        <div className="tech-marquee-track">
-          <div className="tech-marquee-set">
-            {group.skills.map((skill) => (
-              <TechItem key={skill} skill={skill} active={selectedSkill === skill} onSelect={() => onSelect(skill)} />
-            ))}
-          </div>
-          <div className="tech-marquee-set" aria-hidden="true">
-            {group.skills.map((skill) => (
-              <TechItem key={`${skill}-duplicate`} skill={skill} active={false} onSelect={() => onSelect(skill)} inert />
-            ))}
-          </div>
-        </div>
+      <div className="skill-grid mt-6">
+        {group.skills.map((skill, skillIndex) => (
+          <TechItem
+            key={skill}
+            skill={skill}
+            index={skillIndex}
+            active={selectedSkill === skill}
+            onSelect={() => onSelect(skill)}
+          />
+        ))}
       </div>
 
-      {reducedMotion ? null : <span className="sr-only">This technology row moves horizontally and pauses on hover.</span>}
+      {reducedMotion ? null : <span className="sr-only">Technology icons drift gently up and down with staggered timing.</span>}
     </article>
   );
 }
 
-function TechItem({ skill, active, onSelect, inert = false }: { skill: string; active: boolean; onSelect: () => void; inert?: boolean }) {
+function TechItem({
+  skill,
+  index,
+  active,
+  onSelect
+}: {
+  skill: string;
+  index: number;
+  active: boolean;
+  onSelect: () => void;
+}) {
   const Icon = skillIcons[skill] ?? Code2;
   const iconColor = skillColors[skill] ?? "#059669";
-  const iconStyle = { "--skill-color": iconColor } as CSSProperties;
+  const driftDistance = `${index % 2 === 0 ? 8 : -10}px`;
+  const iconStyle = {
+    "--skill-color": iconColor,
+    "--float-distance": driftDistance,
+    "--float-duration": `${3.8 + (index % 4) * 0.45}s`,
+    "--float-delay": `${index * -0.35}s`
+  } as CSSProperties;
 
   return (
     <motion.button
       type="button"
-      aria-label={inert ? undefined : skill}
+      aria-label={skill}
       title={skill}
-      tabIndex={inert ? -1 : 0}
-      whileHover={inert ? undefined : { y: -4 }}
-      whileTap={inert ? undefined : { scale: 0.97 }}
+      whileTap={{ scale: 0.97 }}
       transition={transitions.quick}
-      onClick={inert ? undefined : onSelect}
+      onClick={onSelect}
       style={iconStyle}
-      className={`tech-item group ${active ? "is-active" : ""}`}
+      className={`tech-item skill-float group ${active ? "is-active" : ""}`}
     >
       <span className="tech-icon-box">
         <Icon className="tech-logo" style={{ color: iconColor }} aria-hidden />

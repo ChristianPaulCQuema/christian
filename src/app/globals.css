@@ -328,37 +328,20 @@ img {
   transform: scaleX(1);
 }
 
-.tech-marquee {
-  position: relative;
-  overflow: hidden;
-  padding-block: 0.25rem;
-  mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
+.skill-category-card {
+  min-height: 28rem;
 }
 
-.tech-marquee-track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  animation: tech-marquee var(--marquee-duration, 42s) linear infinite;
-  animation-direction: var(--marquee-direction, normal);
-}
-
-.tech-marquee:hover .tech-marquee-track,
-.tech-marquee:focus-within .tech-marquee-track {
-  animation-play-state: paused;
-}
-
-.tech-marquee-set {
-  display: flex;
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
-  gap: 1.1rem;
-  padding-right: 1.1rem;
+  gap: 0.85rem;
 }
 
 .tech-item {
-  width: 6.25rem;
-  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
   border: 0;
   background: transparent;
   color: inherit;
@@ -367,16 +350,29 @@ img {
   outline: none;
 }
 
+.skill-float {
+  animation: skill-float var(--float-duration, 4.2s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.skill-float:hover,
+.skill-float:focus-visible,
+.skill-float.is-active {
+  animation-play-state: paused;
+}
+
 .tech-icon-box {
   position: relative;
   display: flex;
-  width: 5.5rem;
-  height: 5.5rem;
+  width: 4.6rem;
+  height: 4.6rem;
   align-items: center;
   justify-content: center;
   margin-inline: auto;
   border: 1px solid rgb(203 213 225 / 0.9);
-  border-radius: 1.25rem;
+  border-radius: 1.1rem;
   background:
     radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--skill-color) 13%, transparent), transparent 62%),
     rgb(255 255 255 / 0.92);
@@ -402,8 +398,8 @@ img {
 }
 
 .tech-logo {
-  width: 3.25rem;
-  height: 3.25rem;
+  width: 2.85rem;
+  height: 2.85rem;
   transition:
     transform 180ms ease,
     filter 180ms ease;
@@ -411,11 +407,14 @@ img {
 
 .tech-name {
   display: block;
-  margin-top: 0.65rem;
+  min-height: 2.3rem;
+  margin-top: 0.6rem;
   color: #334155;
-  font-size: 0.84rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+  hyphens: auto;
   transition:
     color 180ms ease,
     transform 180ms ease;
@@ -486,13 +485,14 @@ img {
   color: #f8fafc;
 }
 
-@keyframes tech-marquee {
-  from {
+@keyframes skill-float {
+  0%,
+  100% {
     transform: translate3d(0, 0, 0);
   }
 
-  to {
-    transform: translate3d(-50%, 0, 0);
+  50% {
+    transform: translate3d(0, var(--float-distance, 8px), 0);
   }
 }
 
@@ -561,28 +561,23 @@ img {
       inset 0 1px 0 rgb(255 255 255 / 0.72);
   }
 
-  .tech-marquee {
-    mask-image: linear-gradient(90deg, transparent, black 11%, black 89%, transparent);
+  .skill-category-card {
+    min-height: auto;
   }
 
-  .tech-marquee-set {
-    gap: 0.9rem;
-    padding-right: 0.9rem;
-  }
-
-  .tech-item {
-    width: 5rem;
+  .skill-grid {
+    gap: 0.75rem;
   }
 
   .tech-icon-box {
-    width: 4.25rem;
-    height: 4.25rem;
+    width: 4rem;
+    height: 4rem;
     border-radius: 1rem;
   }
 
   .tech-logo {
-    width: 2.7rem;
-    height: 2.7rem;
+    width: 2.45rem;
+    height: 2.45rem;
   }
 
   .tech-name {
@@ -601,17 +596,7 @@ img {
     animation-iteration-count: 1 !important;
   }
 
-  .tech-marquee {
-    overflow-x: auto;
-    mask-image: none;
-    scrollbar-width: thin;
-  }
-
-  .tech-marquee-track {
+  .skill-float {
     animation: none !important;
-  }
-
-  .tech-marquee-set[aria-hidden="true"] {
-    display: none;
   }
 }
