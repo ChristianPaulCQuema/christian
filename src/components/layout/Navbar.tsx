@@ -97,6 +97,7 @@ export function Navbar() {
 
   return (
     <header
+      data-lenis-prevent={isOpen ? "" : undefined}
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,box-shadow] duration-150 ${
         hasScrolled
           ? "border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/92"
@@ -173,6 +174,7 @@ export function Navbar() {
           <>
             <motion.button
               type="button"
+              data-lenis-prevent
               aria-label="Close navigation menu"
               className="fixed inset-0 top-16 z-0 bg-slate-950/10 dark:bg-slate-950/45 lg:hidden"
               initial={prefersReducedMotion ? false : { opacity: 0 }}
@@ -182,6 +184,7 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
             />
             <motion.div
+              data-lenis-prevent
               initial={prefersReducedMotion ? false : { opacity: 0, y: -10, clipPath: "inset(0 0 14% 0 round 24px)" }}
               animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0 round 24px)" }}
               exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8, clipPath: "inset(0 0 10% 0 round 24px)" }}

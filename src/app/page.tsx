@@ -1,6 +1,9 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import { CursorFollower } from "@/components/motion/CursorFollower";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import { PointerSurface } from "@/components/motion/PointerSurface";
+import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { ExperienceSection } from "@/components/sections/ExperienceSection";
@@ -11,8 +14,10 @@ import { SkillsSection } from "@/components/sections/SkillsSection";
 
 export default function Home() {
   return (
-    <>
+    <MotionProvider>
       <div className="noise-layer" aria-hidden="true" />
+      <ScrollProgress />
+      <CursorFollower />
       <PointerSurface />
       <Navbar />
       <main>
@@ -25,6 +30,6 @@ export default function Home() {
         <ContactSection />
       </main>
       <Footer />
-    </>
+    </MotionProvider>
   );
 }

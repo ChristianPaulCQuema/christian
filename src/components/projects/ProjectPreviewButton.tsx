@@ -74,6 +74,7 @@ export function ProjectPreviewButton({ title, images, variant = "light" }: Proje
     <AnimatePresence>
       {isOpen ? (
         <motion.div
+          data-lenis-prevent
           className="fixed inset-0 z-[100] bg-slate-950/85 p-3 backdrop-blur-sm sm:p-5"
           role="dialog"
           aria-modal="true"

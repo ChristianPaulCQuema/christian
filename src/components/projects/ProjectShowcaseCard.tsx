@@ -4,21 +4,43 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, ExternalLink, Images, Sparkles, X } from "lucide-react";
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ProjectPreviewButton } from "@/components/projects/ProjectPreviewButton";
+import { pointerMovedRecently } from "@/lib/pointerIntent";
 import type { Project } from "@/types/portfolio";
 
-const MIN_IMAGES_FOR_UI_PREVIEW = 10;
+export const MIN_IMAGES_FOR_UI_PREVIEW = 10;
+/** The mouse must rest on a card this long before the hover preview opens. */
+const HOVER_INTENT_MS = 450;
+/** After a preview closes, ignore re-entry briefly so it cannot reopen in a loop. */
+const HOVER_REOPEN_COOLDOWN_MS = 900;
+
 type OpenMode = "hover" | "click" | null;
 
 export function ProjectShowcaseCard({ project }: { project: Project }) {
   const [openMode, setOpenMode] = useState<OpenMode>(null);
+  const hoverTimerRef = useRef<number | null>(null);
+  const hoverCooldownUntilRef = useRef(0);
   const prefersReducedMotion = useReducedMotion();
   const image = project.images[0] ?? null;
   const canPreviewUi = project.images.length >= MIN_IMAGES_FOR_UI_PREVIEW;
   const isOpen = openMode !== null;
   const isClickOpen = openMode === "click";
+
+  const cancelHoverIntent = useCallback(() => {
+    if (hoverTimerRef.current !== null) {
+      window.clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  }, []);
+
+  const closeModal = useCallback(() => {
+    hoverCooldownUntilRef.current = performance.now() + HOVER_REOPEN_COOLDOWN_MS;
+    setOpenMode(null);
+  }, []);
+
+  useEffect(() => cancelHoverIntent, [cancelHoverIntent]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -27,7 +49,7 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setOpenMode(null);
+        closeModal();
       }
     };
 
@@ -39,13 +61,14 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isOpen]);
+  }, [closeModal, isOpen]);
 
   const modal = useMemo(
     () => (
       <AnimatePresence>
         {isOpen ? (
           <motion.div
+            data-lenis-prevent
             className={`fixed inset-0 z-[100] p-3 sm:p-5 ${
               isClickOpen ? "bg-slate-950/82 backdrop-blur-sm" : "bg-slate-950/42"
             }`}
@@ -54,7 +77,7 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
             aria-label={`${project.title} project details`}
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) {
-                setOpenMode(null);
+                closeModal();
               }
             }}
             initial={prefersReducedMotion ? false : { opacity: 0 }}
@@ -63,15 +86,20 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
             transition={{ duration: isClickOpen ? 0.14 : 0.08 }}
           >
             <motion.div
+              onClick={() => {
+                if (!isClickOpen) {
+                  setOpenMode("click");
+                }
+              }}
               onPointerLeave={(event) => {
                 if (!isClickOpen && event.pointerType === "mouse") {
-                  setOpenMode(null);
+                  closeModal();
                 }
               }}
               className={`mx-auto grid overflow-y-auto rounded-xl border border-white/10 bg-white shadow-2xl dark:bg-slate-950 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] ${
                 isClickOpen
                   ? "max-h-[calc(100dvh-2rem)] max-w-5xl overflow-y-auto"
-                  : "max-h-[calc(100dvh-2rem)] max-w-4xl"
+                  : "max-h-[calc(100dvh-2rem)] max-w-4xl cursor-pointer"
               }`}
               initial={prefersReducedMotion ? false : { opacity: 0, y: 10, scale: 0.99 }}
               animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
@@ -111,8 +139,8 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
                   {isClickOpen ? (
                     <button
                       type="button"
-                      onClick={() => setOpenMode(null)}
-                      className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
+                      onClick={closeModal}
+                      className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:rotate-90 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
                       aria-label="Close project details"
                     >
                       <X size={19} aria-hidden="true" />
@@ -136,22 +164,22 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
                 </div>
 
                 {isClickOpen ? (
-                <div className="mt-6 flex flex-wrap gap-3">
-                  {canPreviewUi ? <ProjectPreviewButton title={project.title} images={project.images} variant="dark" /> : null}
-                  {project.liveUrl ? (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex min-h-11 items-center gap-2 rounded-full border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-emerald-300 hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 dark:border-slate-700 dark:text-slate-100 dark:hover:border-emerald-600 dark:hover:bg-emerald-950/40"
-                    >
-                      Demo Link
-                      <ExternalLink size={16} aria-hidden="true" />
-                    </a>
-                  ) : null}
-                </div>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {canPreviewUi ? <ProjectPreviewButton title={project.title} images={project.images} variant="dark" /> : null}
+                    {project.liveUrl ? (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex min-h-11 items-center gap-2 rounded-full border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-emerald-300 hover:bg-emerald-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 dark:border-slate-700 dark:text-slate-100 dark:hover:border-emerald-600 dark:hover:bg-emerald-950/40"
+                      >
+                        Demo Link
+                        <ExternalLink size={16} aria-hidden="true" />
+                      </a>
+                    ) : null}
+                  </div>
                 ) : (
-                  <p className="mt-5 text-xs font-semibold text-slate-500 dark:text-slate-400">Click the project to keep this open.</p>
+                  <p className="mt-5 text-xs font-semibold text-slate-500 dark:text-slate-400">Click this panel to keep it open.</p>
                 )}
               </div>
             </motion.div>
@@ -159,23 +187,59 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
         ) : null}
       </AnimatePresence>
     ),
-    [canPreviewUi, image, isClickOpen, isOpen, prefersReducedMotion, project]
+    [canPreviewUi, closeModal, image, isClickOpen, isOpen, prefersReducedMotion, project]
   );
 
   return (
     <>
       <article
-        className="interactive-card premium-surface group flex h-full min-w-0 cursor-pointer flex-col rounded-[1.1rem] p-2.5 transition-transform duration-150 hover:-translate-y-0.5"
-        onPointerEnter={(event) => {
-          if (event.pointerType === "mouse") {
-            setOpenMode("hover");
+        className="interactive-card premium-surface group flex h-full min-w-0 cursor-pointer flex-col rounded-[1.1rem] p-2.5"
+        onPointerMove={(event) => {
+          if (
+            event.pointerType !== "mouse" ||
+            openMode !== null ||
+            performance.now() < hoverCooldownUntilRef.current ||
+            !pointerMovedRecently()
+          ) {
+            return;
           }
+
+          // Restart on every real movement: the preview opens once the mouse rests on the card.
+          cancelHoverIntent();
+          const scrollAtStart = window.scrollY;
+          hoverTimerRef.current = window.setTimeout(() => {
+            hoverTimerRef.current = null;
+
+            // If the page scrolled meanwhile, the visitor is browsing, not hovering.
+            if (Math.abs(window.scrollY - scrollAtStart) > 2) {
+              return;
+            }
+
+            setOpenMode((current) => current ?? "hover");
+          }, HOVER_INTENT_MS);
+        }}
+        onPointerLeave={cancelHoverIntent}
+        onClick={() => {
+          cancelHoverIntent();
+          setOpenMode("click");
         }}
       >
         {image ? (
           <div className="image-frame">
-            <div className="relative aspect-[16/8.5] w-full bg-slate-950">
-              <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 100vw" className="object-contain object-top transition-transform duration-300 group-hover:scale-[1.012]" />
+            <div className="relative aspect-[16/8.5] w-full overflow-hidden bg-slate-950">
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 100vw"
+                className="object-contain object-top transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+              />
+              {project.liveUrl ? (
+                <span className="absolute right-2 top-2 inline-flex items-center gap-1.5 rounded-full bg-slate-950/80 px-2 py-1 text-[0.62rem] font-bold uppercase tracking-[0.14em] text-emerald-300 backdrop-blur">
+                  <span className="live-dot" aria-hidden="true" />
+                  Live
+                </span>
+              ) : null}
             </div>
           </div>
         ) : null}
@@ -186,7 +250,10 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
               <p className="line-clamp-1 text-xs font-bold uppercase tracking-[0.12em] text-emerald-700 dark:text-emerald-300">{project.category}</p>
               <h3 className="mt-2 text-lg font-semibold leading-tight text-slate-950 dark:text-white">{project.title}</h3>
             </div>
-            <ArrowUpRight className="mt-1 h-5 w-5 flex-none text-slate-400 transition group-hover:text-emerald-700" aria-hidden="true" />
+            <ArrowUpRight
+              className="mt-1 h-5 w-5 flex-none text-slate-400 transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-700"
+              aria-hidden="true"
+            />
           </div>
 
           <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{project.summary}</p>
@@ -204,6 +271,7 @@ export function ProjectShowcaseCard({ project }: { project: Project }) {
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
+                cancelHoverIntent();
                 setOpenMode("click");
               }}
               className="btn-dark inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"

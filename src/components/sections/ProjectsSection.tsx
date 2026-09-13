@@ -1,7 +1,6 @@
-import { projects } from "@/data/projects";
-import { ProjectShowcaseCard } from "@/components/projects/ProjectShowcaseCard";
-import { Reveal } from "@/components/ui/Reveal";
+import { ProjectsGrid } from "@/components/projects/ProjectsGrid";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { projects } from "@/data/projects";
 
 export function ProjectsSection() {
   return (
@@ -10,16 +9,10 @@ export function ProjectsSection() {
         <SectionHeading
           eyebrow="Projects"
           title="Compact project previews with full details"
-          description="Hover a project on desktop or tap Details on mobile to view the description, problem, solution, and customization options."
+          description="Filter the work, then hover a card on desktop or tap it on mobile to view the description, problem, solution, and customization options."
         />
 
-        <div className="grid min-w-0 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {projects.map((project) => (
-            <Reveal key={project.slug} className="h-full">
-              <ProjectShowcaseCard project={project} />
-            </Reveal>
-          ))}
-        </div>
+        <ProjectsGrid projects={projects} />
       </div>
     </section>
   );

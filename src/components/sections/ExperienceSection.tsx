@@ -2,10 +2,11 @@
 
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { experienceItems } from "@/data/experience";
-import { transitions } from "@/lib/motion";
+import { TiltCard } from "@/components/motion/TiltCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { experienceItems } from "@/data/experience";
+import { transitions } from "@/lib/motion";
 
 export function ExperienceSection() {
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -32,44 +33,51 @@ export function ExperienceSection() {
           />
           <div className="space-y-5">
             {experienceItems.map((item, index) => (
-              <Reveal key={item.role} delay={index * 0.06} variant={index % 2 === 0 ? "mask" : "slide"}>
-                <article className="interactive-card premium-surface relative rounded-[1.35rem] p-5 shadow-sm sm:ml-12">
-                  <span className="absolute -left-[43px] top-7 hidden h-5 w-5 rounded-full border-4 border-slate-50 bg-emerald-700 shadow-[0_0_0_7px_rgb(4_120_87_/_0.08)] dark:border-slate-950 sm:block" aria-hidden="true" />
-                  <div className="grid gap-4 lg:grid-cols-[0.72fr_1.28fr]">
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
-                        Experience
-                      </p>
-                      <h3 className="mt-2 text-xl font-semibold text-slate-950 dark:text-white">{item.role}</h3>
-                      <p className="mt-1.5 text-sm font-semibold text-slate-500 dark:text-slate-400">{item.context}</p>
-                    </div>
-                    <div>
-                      <p className="leading-7 text-slate-600 dark:text-slate-300">{item.summary}</p>
-                      <ul className="mt-4 grid gap-2.5">
-                        {item.responsibilities.map((responsibility) => (
-                          <li key={responsibility} className="flex gap-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                            <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-emerald-700 dark:bg-emerald-300" aria-hidden="true" />
-                            <span>{responsibility}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      {item.tools ? (
-                        <div className="mt-4 flex flex-wrap gap-2">
-                          {item.tools.map((tool) => (
-                            <motion.span
-                              key={tool}
-                              whileHover={prefersReducedMotion ? undefined : { y: -2 }}
-                              transition={transitions.quick}
-                              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
-                            >
-                              {tool}
-                            </motion.span>
+              <Reveal key={item.role} delay={index * 0.08} variant={index % 2 === 0 ? "slide" : "right"}>
+                <TiltCard className="rounded-[1.35rem] sm:ml-12" max={4}>
+                  <article className="interactive-card premium-surface group relative rounded-[1.35rem] p-5 shadow-sm">
+                    <span className="absolute -left-[43px] top-7 hidden h-5 w-5 sm:block" aria-hidden="true">
+                      <span className="absolute inset-0 animate-ping rounded-full bg-emerald-500/40" />
+                      <span className="relative block h-5 w-5 rounded-full border-4 border-slate-50 bg-emerald-700 shadow-[0_0_0_7px_rgb(4_120_87_/_0.08)] dark:border-slate-950" />
+                    </span>
+                    <div className="grid gap-4 lg:grid-cols-[0.72fr_1.28fr]">
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+                          Experience
+                        </p>
+                        <h3 className="mt-2 text-xl font-semibold text-slate-950 transition-colors duration-300 group-hover:text-emerald-800 dark:text-white dark:group-hover:text-emerald-300">
+                          {item.role}
+                        </h3>
+                        <p className="mt-1.5 text-sm font-semibold text-slate-500 dark:text-slate-400">{item.context}</p>
+                      </div>
+                      <div>
+                        <p className="leading-7 text-slate-600 dark:text-slate-300">{item.summary}</p>
+                        <ul className="mt-4 grid gap-2.5">
+                          {item.responsibilities.map((responsibility) => (
+                            <li key={responsibility} className="flex gap-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                              <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-emerald-700 transition-transform duration-300 group-hover:scale-150 dark:bg-emerald-300" aria-hidden="true" />
+                              <span>{responsibility}</span>
+                            </li>
                           ))}
-                        </div>
-                      ) : null}
+                        </ul>
+                        {item.tools ? (
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {item.tools.map((tool) => (
+                              <motion.span
+                                key={tool}
+                                whileHover={prefersReducedMotion ? undefined : { y: -3, scale: 1.05 }}
+                                transition={transitions.quick}
+                                className="cursor-default rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600 transition-colors hover:border-emerald-300 hover:text-emerald-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-emerald-700 dark:hover:text-emerald-300"
+                              >
+                                {tool}
+                              </motion.span>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                </article>
+                  </article>
+                </TiltCard>
               </Reveal>
             ))}
           </div>
