@@ -183,6 +183,33 @@ export const projects: Project[] = [
     featured: true
   },
   {
+    title: "Pickleball Booking (LUNDAG)",
+    slug: "pickleball-booking",
+    category: "Sports Facility Booking System",
+    summary:
+      "A responsive pickleball court booking platform covering scheduling, memberships, and facility operations.",
+    description:
+      "LUNDAG Pickleball Booking System is a responsive web platform for booking pickleball courts, built around court scheduling, memberships, lessons, tournaments, and day-to-day facility operations for clubs and sports venues.",
+    problem:
+      "Pickleball clubs and court operators often rely on manual booking sheets, phone calls, and scattered membership records, making it difficult to track court availability, revenue, and utilization in real time.",
+    solution:
+      "The system centralizes court scheduling, membership management, and facility operations into one dashboard, giving admins live visibility into revenue, reservations, and court utilization while customers get a mobile-friendly booking flow with real-time court and time-slot selection and pricing.",
+    customizable:
+      "Can be customized for pickleball clubs, tennis or badminton courts, indoor and outdoor sports facilities, membership tiers, lesson and tournament scheduling, and local pricing.",
+    images: [
+      screenshot("/assets/projects/pickleball/pickleball.jpg", "LUNDAG Pickleball Booking System dashboard and mobile booking flow")
+    ],
+    focus: [
+      "Court Scheduling",
+      "Membership Management",
+      "Admin Dashboard",
+      "Mobile Booking Flow",
+      "Facility Operations"
+    ],
+    liveUrl: "https://pickleball-booking-mu.vercel.app",
+    featured: true
+  },
+  {
     title: "LakbayGo Travel & Tours",
     slug: "lakbaygo",
     category: "Travel Booking System",

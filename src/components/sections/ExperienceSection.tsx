@@ -30,22 +30,22 @@ export function ExperienceSection() {
             style={{ scaleY: prefersReducedMotion ? 1 : railScale }}
             aria-hidden="true"
           />
-          <div className="space-y-7">
+          <div className="space-y-5">
             {experienceItems.map((item, index) => (
               <Reveal key={item.role} delay={index * 0.06} variant={index % 2 === 0 ? "mask" : "slide"}>
-                <article className="interactive-card premium-surface relative rounded-[1.35rem] p-6 shadow-sm sm:ml-12">
-                  <span className="absolute -left-[43px] top-8 hidden h-5 w-5 rounded-full border-4 border-slate-50 bg-emerald-700 shadow-[0_0_0_7px_rgb(4_120_87_/_0.08)] dark:border-slate-950 sm:block" aria-hidden="true" />
-                  <div className="grid gap-5 lg:grid-cols-[0.72fr_1.28fr]">
+                <article className="interactive-card premium-surface relative rounded-[1.35rem] p-5 shadow-sm sm:ml-12">
+                  <span className="absolute -left-[43px] top-7 hidden h-5 w-5 rounded-full border-4 border-slate-50 bg-emerald-700 shadow-[0_0_0_7px_rgb(4_120_87_/_0.08)] dark:border-slate-950 sm:block" aria-hidden="true" />
+                  <div className="grid gap-4 lg:grid-cols-[0.72fr_1.28fr]">
                     <div>
                       <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
                         Experience
                       </p>
-                      <h3 className="mt-3 text-2xl font-semibold text-slate-950 dark:text-white">{item.role}</h3>
-                      <p className="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-400">{item.context}</p>
+                      <h3 className="mt-2 text-xl font-semibold text-slate-950 dark:text-white">{item.role}</h3>
+                      <p className="mt-1.5 text-sm font-semibold text-slate-500 dark:text-slate-400">{item.context}</p>
                     </div>
                     <div>
                       <p className="leading-7 text-slate-600 dark:text-slate-300">{item.summary}</p>
-                      <ul className="mt-5 grid gap-3">
+                      <ul className="mt-4 grid gap-2.5">
                         {item.responsibilities.map((responsibility) => (
                           <li key={responsibility} className="flex gap-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
                             <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-emerald-700 dark:bg-emerald-300" aria-hidden="true" />
@@ -54,7 +54,7 @@ export function ExperienceSection() {
                         ))}
                       </ul>
                       {item.tools ? (
-                        <div className="mt-5 flex flex-wrap gap-2">
+                        <div className="mt-4 flex flex-wrap gap-2">
                           {item.tools.map((tool) => (
                             <motion.span
                               key={tool}

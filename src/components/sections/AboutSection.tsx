@@ -6,7 +6,7 @@ export function AboutSection() {
   return (
     <section id="about" className="section ambient-section bg-white dark:bg-slate-950">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+        <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
           <Reveal variant="slide">
             <div className="lg:sticky lg:top-24">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">About Me</p>
@@ -22,8 +22,8 @@ export function AboutSection() {
 
           <div>
             <Reveal variant="mask">
-              <div className="premium-surface rounded-[1.35rem] p-6 sm:p-8">
-                <div className="space-y-6 text-lg leading-9 text-slate-600 dark:text-slate-300">
+              <div className="premium-surface rounded-[1.35rem] p-6 sm:p-7">
+                <div className="space-y-4 text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg sm:leading-8">
                   {profile.about.map((paragraph) => (
                     <p key={paragraph}>{paragraph}</p>
                   ))}
@@ -31,10 +31,10 @@ export function AboutSection() {
               </div>
             </Reveal>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {profile.highlights.map((highlight, index) => (
                 <Reveal key={highlight} delay={index * 0.05} variant="blur">
-                  <div className="interactive-card premium-surface group rounded-2xl p-4 transition hover:-translate-y-1">
+                  <div className="interactive-card premium-surface group rounded-2xl p-3.5 transition hover:-translate-y-1">
                     <div className="flex items-center gap-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 transition group-hover:scale-105 dark:bg-emerald-950 dark:text-emerald-300">
                         <CheckCircle2 className="h-5 w-5" aria-hidden="true" />

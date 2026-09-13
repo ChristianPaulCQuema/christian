@@ -11,7 +11,7 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="ambient-section relative overflow-hidden pt-32 sm:pt-36"
+      className="ambient-section relative overflow-hidden pt-28 sm:pt-32"
     >
       <div
         className="absolute inset-0 -z-10"
@@ -22,7 +22,7 @@ export function HeroSection() {
       />
       <div className="absolute inset-x-0 top-0 -z-10 h-full bg-[linear-gradient(90deg,transparent_0_12%,rgb(15_23_42_/_0.045)_12.1%,transparent_12.2%_87.8%,rgb(15_23_42_/_0.045)_87.9%,transparent_88%)] dark:bg-[linear-gradient(90deg,transparent_0_12%,rgb(226_232_240_/_0.045)_12.1%,transparent_12.2%_87.8%,rgb(226_232_240_/_0.045)_87.9%,transparent_88%)]" />
 
-      <div className="hero-layout mx-auto px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+      <div className="hero-layout mx-auto px-4 pb-12 sm:px-6 lg:px-8 lg:pb-16">
         <div className="hero-copy-enter order-1">
           <p className="eyebrow-chip">
             <Sparkles size={14} aria-hidden="true" />

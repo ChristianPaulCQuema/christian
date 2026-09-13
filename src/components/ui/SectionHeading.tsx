@@ -11,7 +11,7 @@ export function SectionHeading({ eyebrow, title, description, inverted = false, 
   void index;
 
   return (
-    <div className={`mb-10 max-w-3xl md:mb-14 ${align === "center" ? "mx-auto text-center" : "text-left"}`}>
+    <div className={`mb-8 max-w-3xl md:mb-10 ${align === "center" ? "mx-auto text-center" : "text-left"}`}>
       <div className={`flex items-center gap-3 ${align === "center" ? "justify-center" : ""}`}>
         <p className={`text-sm font-semibold uppercase tracking-[0.18em] ${inverted ? "text-emerald-300" : "text-emerald-700"}`}>
           {eyebrow}

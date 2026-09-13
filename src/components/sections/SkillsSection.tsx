@@ -4,6 +4,9 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { skillsCategories } from "@/data/skills";
 import type { SkillCategory, SkillTechnology } from "@/data/skills";
 
+const allSkills = skillsCategories.flatMap((category) => category.skills);
+const marqueeSkills = [...allSkills, ...allSkills];
+
 export function SkillsSection() {
   return (
     <section id="skills" className="section skills-section ambient-section bg-white dark:bg-slate-950">
@@ -13,6 +16,10 @@ export function SkillsSection() {
           title="Skills & Technologies"
           description="A practical toolkit for building, deploying, and supporting modern applications."
         />
+
+        <Reveal variant="fade" className="block">
+          <SkillsMarquee />
+        </Reveal>
 
         <div className="skills-category-grid">
           {skillsCategories.map((category, index) => (
@@ -28,6 +35,28 @@ export function SkillsSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function SkillsMarquee() {
+  return (
+    <div className="skills-marquee" aria-hidden="true">
+      <div className="skills-marquee-track">
+        {marqueeSkills.map((skill, index) => {
+          const Icon = skill.icon;
+          const style = { "--skill-color": skill.color } as CSSProperties;
+
+          return (
+            <span className="skills-marquee-chip" style={style} key={`${skill.name}-${index}`}>
+              <span className="skills-marquee-chip-icon">
+                <Icon style={{ color: skill.color }} aria-hidden />
+              </span>
+              <span className="skills-marquee-chip-name">{skill.name}</span>
+            </span>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
